@@ -29,7 +29,6 @@ local Tab1 = Window:CreateTab("Claim", 104799707087062) -- Title, Image
 
 --Claim
 local autoClaimDoggyJump = false
-
 local Toggle3 = Tab1:CreateToggle({
     Name = "Auto Claim Doggy Jump",
     Info = "", -- Optional
@@ -40,20 +39,21 @@ local Toggle3 = Tab1:CreateToggle({
         if Value then
             task.spawn(function()
                 while autoClaimDoggyJump do
-                  for 1 = 1,3 do then
-                    local args = {
-                        [1] = "DoggyJumpWin",
-                        [2] = i
-                    }
-                    
-                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-                  end
+                    for i = 1, 3 do
+                        local args = {
+                            [1] = "DoggyJumpWin",
+                            [2] = i
+                        }
+
+                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                    end
                     task.wait(1800)
                 end
             end)
         end
     end,
 })
+
 
 
 
