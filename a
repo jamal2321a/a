@@ -40,12 +40,14 @@ local Toggle3 = Tab1:CreateToggle({
         if Value then
             task.spawn(function()
                 while autoClaimDoggyJump do
+                  for 1 = 1,3 do then
                     local args = {
                         [1] = "DoggyJumpWin",
-                        [2] = 2
+                        [2] = i
                     }
                     
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                  end
                     task.wait(1800)
                 end
             end)
