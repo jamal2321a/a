@@ -1,155 +1,147 @@
 local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/UI-Interface/CustomFIeld/main/RayField.lua'))()
-local Window = Rayfield:CreateWindow({
-   Name = "Bubble Gum Simulator Infinity",
-   LoadingTitle = "Bubble Gum Simulator Infinity",
-   LoadingSubtitle = "by Secret",
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "Arrayfield"
-   },
-   Discord = {
-      Enabled = false,
-      Invite = "sirius", -- The Discord invite code, do not include discord.gg/
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
-   },
-   KeySystem = true, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "Bubble Gum Simulator Infinity",
-      Subtitle = "~Exploit~",
-      Note = "Best Bubble Gum Simulator Script",
-      FileName = "SiriusKey",
-      SaveKey = false,
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = "Secret"
-   }
-})
-local Tab = Window:CreateTab("Main", 136925977524502) -- Title, Image
-local Tab1 = Window:CreateTab("Claim", 104799707087062) -- Title, Image
 
---Claim
+local Window = Rayfield:CreateWindow({
+    Name = "Bubble Gum Simulator Infinity",
+    LoadingTitle = "Bubble Gum Simulator Infinity",
+    LoadingSubtitle = "by Secret",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil,
+        FileName = "Arrayfield"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "sirius",
+        RememberJoins = true
+    },
+    KeySystem = true,
+    KeySettings = {
+        Title = "Bubble Gum Simulator Infinity",
+        Subtitle = "~Exploit~",
+        Note = "Best Bubble Gum Simulator Script",
+        FileName = "SiriusKey",
+        SaveKey = false,
+        GrabKeyFromSite = false,
+        Key = "Secret"
+    }
+})
+
+local Tab = Window:CreateTab("Main", 136925977524502)
+local Tab1 = Window:CreateTab("Claim", 104799707087062)
+
+-- Auto Claim Doggy Jump
 local autoClaimDoggyJump = false
-local Toggle3 = Tab1:CreateToggle({
+Tab1:CreateToggle({
     Name = "Auto Claim Doggy Jump",
-    Info = "", -- Optional
     CurrentValue = false,
     Flag = "Toggle4",
     Callback = function(Value)
         autoClaimDoggyJump = Value
-        if Value then
-            task.spawn(function()
-                while autoClaimDoggyJump do
-                    for i = 1, 3 do
-                        local args = {
-                            [1] = "DoggyJumpWin",
-                            [2] = i
-                        }
-
-                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-                    end
-                    task.wait(1800)
+        task.spawn(function()
+            while autoClaimDoggyJump do
+                for i = 1, 3 do
+                    local args = {
+                        [1] = "DoggyJumpWin",
+                        [2] = i
+                    }
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
                 end
-            end)
-        end
+                task.wait(1800)
+            end
+        end)
     end,
 })
 
-
-
-
---Main
-
+-- Auto Bubble
 local autoBubbleEnabled = false
-local autoSellEnabled = false
-local autoPickupEnabled = false
-
-local Toggle = Tab:CreateToggle({
+Tab:CreateToggle({
     Name = "Auto Bubble",
-    Info = "", -- Optional
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
         autoBubbleEnabled = Value
-        if Value then
-            task.spawn(function()
-                while autoBubbleEnabled do
-                    task.wait(0.25)
-                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
-                end
-            end)
-        end
+        task.spawn(function()
+            while autoBubbleEnabled do
+                task.wait(0.25)
+                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
+            end
+        end)
     end,
 })
 
-local Toggle1 = Tab:CreateToggle({
+-- Auto Sell
+local autoSellEnabled = false
+Tab:CreateToggle({
     Name = "Auto Sell",
-    Info = "", -- Optional
     CurrentValue = false,
     Flag = "Toggle2",
     Callback = function(Value)
         autoSellEnabled = Value
-        if Value then
-            task.spawn(function()
-                while autoSellEnabled do
-                    task.wait(1)
-
-                    local args = {
-                        [1] = "SellBubble"
-                    }
-
-                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-                end
-            end)
-        end
+        task.spawn(function()
+            while autoSellEnabled do
+                task.wait(1)
+                local args = {
+                    [1] = "SellBubble"
+                }
+                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+            end
+        end)
     end,
 })
- local Rendered = workspace:WaitForChild("Rendered")
-                    local targetChunker = nil
-                    
-                    -- Find the correct Chunker folder
-                    for _, chunker in ipairs(Rendered:GetChildren()) do
-                        if chunker:IsA("Folder") and chunker.Name:find("Chunker") then
-                            local models = chunker:GetChildren()
-                            local uuidLikeCount = 0
-                    
-                            for _, model in ipairs(models) do
-                                if model:IsA("Model") and model.Name:match("^[%x%-]+$") and #model.Name > 10 then
-                                    uuidLikeCount += 1
-                                end
-                            end
-                    
-                            if uuidLikeCount > 10 then -- You can increase this threshold if needed
-                                targetChunker = chunker
-                                break
-                            end
-                        end
-                    end
 
-local Toggle2 = Tab:CreateToggle({
+-- Auto Pickup
+local autoPickupEnabled = false
+
+local Rendered = workspace:WaitForChild("Rendered")
+local targetChunker = nil
+
+-- Find Chunker Folder
+for _, chunker in ipairs(Rendered:GetChildren()) do
+    if chunker:IsA("Folder") and chunker.Name:find("Chunker") then
+        local models = chunker:GetChildren()
+        local uuidLikeCount = 0
+
+        for _, model in ipairs(models) do
+            if model:IsA("Model") and model.Name:match("^[%x%-]+$") and #model.Name > 10 then
+                uuidLikeCount += 1
+            end
+        end
+
+        if uuidLikeCount > 10 then
+            targetChunker = chunker
+            break
+        end
+    end
+end
+
+Tab:CreateToggle({
     Name = "Auto Pickup",
-    Info = "", -- Optional
     CurrentValue = false,
     Flag = "Toggle3",
     Callback = function(Value)
         autoPickupEnabled = Value
-        if Value then
-            task.spawn(function()
-                while autoPickupEnabled do
-                    if targetChunker then
-                        for _, child in ipairs(targetChunker:GetChildren()) do
+        task.spawn(function()
+            while autoPickupEnabled do
+                if targetChunker then
+                    for _, child in ipairs(targetChunker:GetChildren()) do
+                        if child and child:IsA("Model") then
                             local args = {
                                 [1] = child.Name
                             }
                             game:GetService("ReplicatedStorage").Remotes.Pickups.CollectPickup:FireServer(unpack(args))
-                    child:Destroy()
+                            task.wait(0.1)
+                            if child then
+                                child:Destroy()
+                            end
                         end
-                    else
-                        warn("No suitable Chunker folder found.")
                     end
-                    task.wait(7)
+                else
+                    warn("No suitable Chunker folder found.")
                 end
-            end)
-        end
+                task.wait(7)
+            end
+        end)
     end,
 })
+
 
