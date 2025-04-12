@@ -69,19 +69,7 @@ local Toggle1 = Tab:CreateToggle({
         end
     end,
 })
-
-local Toggle2 = Tab:CreateToggle({
-    Name = "Auto Pickup",
-    Info = "", -- Optional
-    CurrentValue = false,
-    Flag = "Toggle3",
-    Callback = function(Value)
-        autoPickupEnabled = Value
-        if Value then
-            task.spawn(function()
-                while autoPickupEnabled do
-                    task.wait(10)
-                    local Rendered = workspace:WaitForChild("Rendered")
+ local Rendered = workspace:WaitForChild("Rendered")
                     local targetChunker = nil
                     
                     -- Find the correct Chunker folder
@@ -102,8 +90,16 @@ local Toggle2 = Tab:CreateToggle({
                             end
                         end
                     end
-                    
-                    -- Make sure we found a valid Chunker
+local Toggle2 = Tab:CreateToggle({
+    Name = "Auto Pickup",
+    Info = "", -- Optional
+    CurrentValue = false,
+    Flag = "Toggle3",
+    Callback = function(Value)
+        autoPickupEnabled = Value
+        if Value then
+            task.spawn(function()
+                while autoPickupEnabled do
                     if targetChunker then
                         for _, child in ipairs(targetChunker:GetChildren()) do
                             local args = {
@@ -115,7 +111,7 @@ local Toggle2 = Tab:CreateToggle({
                     else
                         warn("No suitable Chunker folder found.")
                     end
-                    
+                    task.wait(5)
                 end
             end)
         end
