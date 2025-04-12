@@ -138,7 +138,7 @@ Tab:CreateToggle({
                 else
                     warn("No suitable Chunker folder found.")
                 end
-                task.wait(7)
+                task.wait(1)
             end
         end)
     end,
