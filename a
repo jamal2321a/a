@@ -25,6 +25,38 @@ local Window = Rayfield:CreateWindow({
    }
 })
 local Tab = Window:CreateTab("Main", 136925977524502) -- Title, Image
+local Tab1 = Window:CreateTab("Claim", 104799707087062) -- Title, Image
+
+--Claim
+local autoClaimDoggyJump = false
+
+local Toggle3 = Tab:CreateToggle({
+    Name = "Auto Claim Doggy Jump",
+    Info = "", -- Optional
+    CurrentValue = false,
+    Flag = "Toggle4",
+    Callback = function(Value)
+        autoClaimDoggyJump = Value
+        if Value then
+            task.spawn(function()
+                while autoClaimDoggyJump do
+                    local args = {
+                        [1] = "DoggyJumpWin",
+                        [2] = 2
+                    }
+                    
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                    task.wait(1800)
+                end
+            end)
+        end
+    end,
+})
+
+
+
+--Main
+
 local autoBubbleEnabled = false
 local autoSellEnabled = false
 local autoPickupEnabled = false
@@ -57,7 +89,7 @@ local Toggle1 = Tab:CreateToggle({
         if Value then
             task.spawn(function()
                 while autoSellEnabled do
-                    task.wait(2.5)
+                    task.wait(1)
 
                     local args = {
                         [1] = "SellBubble"
@@ -90,6 +122,7 @@ local Toggle1 = Tab:CreateToggle({
                             end
                         end
                     end
+
 local Toggle2 = Tab:CreateToggle({
     Name = "Auto Pickup",
     Info = "", -- Optional
@@ -111,9 +144,10 @@ local Toggle2 = Tab:CreateToggle({
                     else
                         warn("No suitable Chunker folder found.")
                     end
-                    task.wait(5)
+                    task.wait(7)
                 end
             end)
         end
     end,
 })
+
