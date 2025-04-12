@@ -30,7 +30,7 @@ local Tab1 = Window:CreateTab("Claim", 104799707087062) -- Title, Image
 --Claim
 local autoClaimDoggyJump = false
 
-local Toggle3 = Tab:CreateToggle({
+local Toggle3 = Tab1:CreateToggle({
     Name = "Auto Claim Doggy Jump",
     Info = "", -- Optional
     CurrentValue = false,
