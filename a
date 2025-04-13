@@ -33,22 +33,6 @@ local Tab1 = Window:CreateTab("Claim", 104799707087062)
 local autoClaimDoggyJump = false
 local autoClaimChests = false
 
-local function parseTimeLeft(text)
-    if string.match(text, "^%d+:%d+$") then
-        -- Format is "m:s" or "mm:ss"
-        local minutes, seconds = string.match(text, "(%d+):(%d+)")
-        local totalSeconds = tonumber(minutes) * 60 + tonumber(seconds)
-        return totalSeconds, "minutes"
-    elseif string.match(text, "^%d+s$") then
-        -- Format is "Xs"
-        local seconds = string.match(text, "(%d+)s")
-        return tonumber(seconds), "seconds"
-    else
-        warn("Unknown time format: " .. text)
-        return nil, "unknown"
-    end
-end
-
 local function convertToSeconds(timeString)
     -- Check if the format is "m:ss" or "mm:ss"
     if string.match(timeString, "^%d+:%d+$") then
@@ -77,10 +61,11 @@ Tab1:CreateToggle({
         task.spawn(function()
             while autoClaimChests do
                 for chest, Time in pairs(Chests) do
-                    local timeLeftText = workspace.Rendered.Generic[chest].Countdown.BillboardGui.Label.Text
-                    local format = parseTimeLeft(timeLeftText)
+                    local timeLeftText = workspace.Rendered.Generic[chest].Countdown.BillboardGUI.Label.Text
                     local timeLeft = convertToSeconds(timeLeftText)
-                    print(format,timeLeft)
+                    if timeLeft < 61 then
+
+                    end
                  --   local args = {
                      --   [1] = "ClaimChest",
                       --  [2] = chest
@@ -160,7 +145,7 @@ Tab1:CreateToggle({
         end)
     end,
 })
-
+local autoSellEnabled = false
 Tab:CreateToggle({
     Name = "Auto Bubble",
     CurrentValue = false,
@@ -169,30 +154,27 @@ Tab:CreateToggle({
         autoBubbleEnabled = Value
         task.spawn(function()
             while autoBubbleEnabled do
-                task.wait(0.25)
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
+                task.wait(0.1)
+                if autoSellEnabled do
+                    local args = {
+                        [1] = "SellBubble"
+                    }
+                    game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
+                end
             end
         end)
     end,
 })
 
 -- Auto Sell
-local autoSellEnabled = false
+
 Tab:CreateToggle({
     Name = "Auto Sell",
     CurrentValue = false,
     Flag = "Toggle2",
     Callback = function(Value)
         autoSellEnabled = Value
-        task.spawn(function()
-            while autoSellEnabled do
-                task.wait(1)
-                local args = {
-                    [1] = "SellBubble"
-                }
-                game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-            end
-        end)
     end,
 })
 
