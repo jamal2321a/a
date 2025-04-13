@@ -29,16 +29,20 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("Main", 136925977524502)
 local Tab1 = Window:CreateTab("Claim", 104799707087062)
 
--- Auto Claim Doggy Jump
+-- Toggles
 local autoClaimDoggyJump = false
 local autoClaimChests = false
+local autoBubbleEnabled = false
+local autoSellEnabled = false
+local autoPickupEnabled = false
+local autoClaimSpin = false
+local AutoClaimPlaytime = false
 
+-- Time converter
 local function convertToSeconds(timeString)
-    -- Check if the format is "m:ss" or "mm:ss"
     if string.match(timeString, "^%d+:%d+$") then
         local minutes, seconds = string.match(timeString, "(%d+):(%d+)")
         return tonumber(minutes) * 60 + tonumber(seconds)
-    -- Check if the format is "Xs"
     elseif string.match(timeString, "^%d+s$") then
         local seconds = string.match(timeString, "(%d+)s")
         return tonumber(seconds)
@@ -48,10 +52,13 @@ local function convertToSeconds(timeString)
     end
 end
 
+-- Chest timers
 local Chests = {
     ["Giant Chest"] = 900,
     ["Void Chest"] = 2400
 }
+
+-- Auto Claim Chests
 Tab1:CreateToggle({
     Name = "Auto Claim Chests",
     CurrentValue = false,
@@ -63,16 +70,13 @@ Tab1:CreateToggle({
                 for chest, Time in pairs(Chests) do
                     local timeLeftText = workspace.Rendered.Generic[chest].Countdown.BillboardGUI.Label.Text
                     local timeLeft = convertToSeconds(timeLeftText)
-                    if timeLeft < 61 then
-
+                    if timeLeft and timeLeft < 61 then
+                        local args = {
+                            [1] = "ClaimChest",
+                            [2] = chest
+                        }
+                        game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
                     end
-                 --   local args = {
-                     --   [1] = "ClaimChest",
-                      --  [2] = chest
-                    --}
-
-                    --game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-
                 end
                 task.wait(60)
             end
@@ -80,7 +84,7 @@ Tab1:CreateToggle({
     end,
 })
 
-
+-- Auto Doggy Jump
 Tab1:CreateToggle({
     Name = "Auto Complete Doggy Jump (30 min Cooldown)",
     CurrentValue = false,
@@ -102,10 +106,7 @@ Tab1:CreateToggle({
     end,
 })
 
--- Auto Bubble
-local autoBubbleEnabled = false
-local AutoClaimPlaytime = false
-local autoClaimSpin = false
+-- Auto Claim Spin
 Tab1:CreateToggle({
     Name = "Auto Claim Spin",
     CurrentValue = false,
@@ -117,13 +118,14 @@ Tab1:CreateToggle({
                 local args = {
                     [1] = "ClaimFreeWheelSpin"
                 }
-
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer(unpack(args))
-            task.wait(60)
+                task.wait(60)
             end
         end)
     end,
 })
+
+-- Auto Claim Playtime Gifts
 Tab1:CreateToggle({
     Name = "Auto Claim Playtime Gifts",
     CurrentValue = false,
@@ -132,12 +134,11 @@ Tab1:CreateToggle({
         AutoClaimPlaytime = Value
         task.spawn(function()
             while AutoClaimPlaytime do
-                for i = 1,9 do
+                for i = 1, 9 do
                     local args = {
                         [1] = "ClaimPlaytime",
                         [2] = i
                     }
-
                     game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Function:InvokeServer(unpack(args))
                 end
                 task.wait(60)
@@ -145,7 +146,8 @@ Tab1:CreateToggle({
         end)
     end,
 })
-local autoSellEnabled = false
+
+-- Auto Bubble + Sell
 Tab:CreateToggle({
     Name = "Auto Bubble",
     CurrentValue = false,
@@ -156,7 +158,7 @@ Tab:CreateToggle({
             while autoBubbleEnabled do
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
                 task.wait(0.1)
-                if autoSellEnabled == true do
+                if autoSellEnabled == true then
                     local args = {
                         [1] = "SellBubble"
                     }
@@ -166,8 +168,6 @@ Tab:CreateToggle({
         end)
     end,
 })
-
--- Auto Sell
 
 Tab:CreateToggle({
     Name = "Auto Sell",
@@ -179,8 +179,6 @@ Tab:CreateToggle({
 })
 
 -- Auto Pickup
-local autoPickupEnabled = false
-
 local Rendered = workspace:WaitForChild("Rendered")
 local targetChunker = nil
 
@@ -189,13 +187,11 @@ for _, chunker in ipairs(Rendered:GetChildren()) do
     if chunker:IsA("Folder") and chunker.Name:find("Chunker") then
         local models = chunker:GetChildren()
         local uuidLikeCount = 0
-
         for _, model in ipairs(models) do
             if model:IsA("Model") and model.Name:match("^[%x%-]+$") and #model.Name > 10 then
                 uuidLikeCount += 1
             end
         end
-
         if uuidLikeCount > 10 then
             targetChunker = chunker
             break
