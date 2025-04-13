@@ -77,7 +77,7 @@ Tab1:CreateToggle({
         task.spawn(function()
             while autoClaimChests do
                 for chest, Time in pairs(Chests) do
-                    local timeLeftText = workspace.Rendered.Generic[chest].Countdown.BillboardGUI.Label.Text
+                    local timeLeftText = workspace.Rendered.Generic[chest].Countdown.BillboardGui.Label.Text
                     local format = parseTimeLeft(timeLeftText)
                     local timeLeft = convertToSeconds(timeLeftText)
                     print(format,timeLeft)
