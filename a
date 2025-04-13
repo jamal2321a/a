@@ -157,7 +157,6 @@ Tab:CreateToggle({
         task.spawn(function()
             while autoBubbleEnabled do
                 game:GetService("ReplicatedStorage").Shared.Framework.Network.Remote.Event:FireServer("BlowBubble")
-                task.wait(0.1)
                 if autoSellEnabled == true then
                     local args = {
                         [1] = "SellBubble"
